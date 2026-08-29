@@ -1,0 +1,14 @@
+# The builder stage installs dependencies; runtime remains free of build residue.
+FROM python:3.11-slim AS builder
+WORKDIR /build
+COPY requirements/train.txt .
+RUN pip install --no-cache-dir --prefix=/install -r train.txt
+
+FROM python:3.11-slim AS training
+WORKDIR /app
+COPY --from=builder /install /usr/local
+COPY src/ ./src/
+COPY configs/ ./configs/
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+ENTRYPOINT ["python", "-m", "src.train"]
