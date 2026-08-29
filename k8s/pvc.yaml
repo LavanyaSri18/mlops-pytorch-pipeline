@@ -1,0 +1,25 @@
+# Uses the cluster's default StorageClass. For a multi-node cluster, use an
+# RWX-capable StorageClass for the checkpoints claim if replicas span nodes.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mlops-data-pvc
+  namespace: ml-training
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mlops-checkpoints-pvc
+  namespace: ml-training
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
